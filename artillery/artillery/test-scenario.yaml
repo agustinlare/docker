@@ -1,0 +1,25 @@
+config:
+  target: http://nginx
+  phases:
+    - duration: 120
+      arrivalRate: 10
+      rampTo: 50
+      name: "Warm up the application"
+    - duration: 600
+      arrivalRate: 50
+      name: "Sustained max load"
+  plugins:
+    influxdb:
+      testName: TEST
+      measurementName: Latency
+      errorMeasurementName: ClientSideErrors
+      testRunId: 1
+      influx:
+        host: influxdb
+        username: telegraf
+        password: gomaslol
+        database: artillery
+scenarios:
+  - flow:
+      - get:
+          url: "/"

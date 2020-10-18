@@ -1,0 +1,22 @@
+version: '2'
+services:
+  nginx:
+    labels:
+      - "docker.group=artillery"
+    image: nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+
+  artillery:
+    labels:
+      - "docker.group=artillery"
+    container_name: artillery
+    image: agustinlare/artillery
+    depends_on:
+      - nginx
+
+networks:
+  default:
+    external:
+      name: iotstack_default
