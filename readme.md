@@ -14,3 +14,6 @@
 ## Keycloack 
 * Raspberry 
 `docker run -itd -p 8081:8080 --network=iotstack_default -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin ruifigueiredo/rpi-keycloak`
+
+## Speedtest-exporter
+Forkeado de stefanwalther/speedtest-exporter
