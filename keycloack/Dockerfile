@@ -8,5 +8,5 @@ RUN wget https://downloads.jboss.org/keycloak/4.8.1.Final/keycloak-4.8.1.Final.t
 
 COPY config/keycloak-add-user.json /data/keycloak-4.8.1.Final/standalone/configuration/keycloak-add-user.json
 
-CMD ["/data/keycloak-4.8.1.Final/bin/standalone.sh", "-b", "0.0.0.0"]
+CMD ["/data/keycloak-4.8.1.Final/bin/standalone.sh", "-b", "192.168.0.183"]
 EXPOSE 8080 9990
