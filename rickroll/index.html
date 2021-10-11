@@ -1,0 +1,14 @@
+<div id="texto">Expose by clicking</div>
+<video controls autoplay playsinline autoplay loop id="myvideo">
+    <source src="media/rickroll.mp4" type="video/mp4"> 
+</video>
+<script>
+document.getElementById("myvideo").style.display = "none";
+document.addEventListener('click', musicPlay);
+function musicPlay() {
+    document.getElementById("texto").style.display = "none";
+    document.getElementById("myvideo").style.display = "block";
+    document.getElementById('myvideo').play();
+    document.removeEventListener('click', musicPlay);
+}
+</script>
