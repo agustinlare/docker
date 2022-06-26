@@ -1,0 +1,101 @@
+apiVersion: v1
+data:
+  SCIURO_ALERT_RECEIVER: CHANGEME
+  SCIURO_ALERTMANAGER_URL: https://CHANGEME.example.com
+  SCIURO_NODE_FILTERS: instance=~({{.FullName}}|{{.ShortName}})
+kind: ConfigMap
+metadata:
+  name: sciuro
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sciuro
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sciuro
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sciuro
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+      labels:
+        app: sciuro
+    spec:
+      containers:
+      - env:
+        - name: GOMAXPROCS
+          value: "2"
+        envFrom:
+        - configMapRef:
+            name: sciuro
+            optional: false
+        image: index.docker.io/cloudflare/sciuro@sha256:4166b4db76cde84e4874137e052c81c705bbff1a5387d56bdc8621f9ad4ac9de
+        imagePullPolicy: IfNotPresent
+        name: sciuro
+        ports:
+        - containerPort: 8080
+          name: metrics
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 250m
+            memory: 250Mi
+      restartPolicy: Always
+      serviceAccountName: sciuro
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sciuro-leader
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sciuro
+rules:
+- apiGroups:
+  - ""
+  resourceNames:
+  - sciuro-leader
+  resources:
+  - configmaps
+  verbs:
+  - update
+  - get
+  - watch
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - update
+  - delete
+  - patch
+  - get
+  - list
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sciuro
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sciuro
+subjects:
+- kind: ServiceAccount
+  name: sciuro
+
