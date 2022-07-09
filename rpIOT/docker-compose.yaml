@@ -1,0 +1,202 @@
+version: '3.1'
+services:
+
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./volumes/portainer/data:/data
+
+  influxdb:
+    container_name: influxdb
+    image: influxdb:1.8.2
+    restart: unless-stopped
+    ports:
+      - 8086:8086
+      - 8083:8083
+      - 2003:2003
+    env_file:
+      - ./services/influxdb/influxdb.env
+    volumes:
+      - ./volumes/influxdb/data:/var/lib/influxdb
+      - ./backups/influxdb/db:/var/lib/influxdb/backup
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: unless-stopped
+    env_file:
+      - ./services/postgres/postgres.env
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volumes/postgres/data:/var/lib/postgresql/data
+
+  mariadb:
+    image: linuxserver/mariadb
+    container_name: mariadb
+    env_file:
+      - ./services/mariadb/mariadb.env
+    volumes:
+      - ./volumes/mariadb/config:/config
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:8.5.2
+    restart: unless-stopped
+    user: "0"
+    ports:
+      - 3000:3000
+    env_file:
+      - ./services/grafana/grafana.env
+    volumes:
+      - ./services/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./services/grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./services/grafana/dashboards:/var/lib/grafana/dashboards
+      # - ./services/grafana/grafana.ini:/etc/grafana/grafana.ini
+      # - ./volumes/grafana/data:/var/lib/grafana
+      # - ./volumes/grafana/log:/var/log/grafana
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8089:80/tcp"
+      #- "443:443/tcp"
+    env_file:
+      - ./services/pihole/pihole.env
+    volumes:
+       - ./volumes/pihole/etc-pihole/:/etc/pihole/
+       - ./volumes/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+      - WEBUI_PORT=15080
+    volumes:
+      - ./volumes/qbittorrent/config:/config
+      - ./volumes/qbittorrent/downloads:/downloads
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+      - 15080:15080
+      - 1080:1080
+
+  chronograf:
+    container_name: chronograf
+    image: chronograf:latest
+    restart: unless-stopped
+    ports:
+      - 8888:8888
+
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+      #- UMASK_SET=022 #optional
+    ports:
+      - 32400:32400
+    volumes:
+      - ./volumes/plex/config:/config
+      #- ~/mnt/HDD/tvseries:/tv
+      - ./volumes/plex/transcode:/transcode
+    restart: unless-stopped
+
+  prometheus:
+    image: evns/rpi-prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./services/prometheus:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      # - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+    links:
+      - ping:ping
+      - speedtest:speedtest
+
+  nodeexp:
+    container_name: node-exporter
+    privileged: true
+    image: quay.io/agustinlare/speedtest-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - 9100:9100
+    restart: always
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+
+  ping:
+    tty: true
+    stdin_open: true
+    container_name: ping-blackbox
+    restart: unless-stopped
+    expose:
+      - 9115
+    ports:
+      - 9115:9115
+    image: prom/blackbox-exporter
+    volumes:
+      - ./services/blackbox/config:/config
+    command:
+      - '--config.file=/config/blackbox.yml'
+
+  speedtest:
+    container_name: speedtest-exporter
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    expose:
+      - 9696
+    ports:
+      - 9696:9696
+    image: quay.io/agustinlare/speedtest-exporter
+
+  hassio:
+    container_name: hassio
+    privileged: true
+    restart: unless-stopped
+    env_file:
+      - ./services/hassio/hassio.env
+    volumes:
+      - ./services/hassio/config:/config
+    ports:
+      - 8123:8123
+    image: ghcr.io/home-assistant/home-assistant:stable
