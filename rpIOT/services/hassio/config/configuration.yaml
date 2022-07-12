@@ -1,0 +1,31 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+shell_command:
+  ubuntu_off: /bin/bash -c  "ssh -i /config/cfg/pi agustinlare@192.168.1.207 \"sudo shutdown now\""
+  tv_off: /bin/bash -c "python3 ./blk.py 192.168.1.193 send tv on_off"
+  tv_source: /bin/bash -c "python3 ./blk.py 192.168.1.193 send tv source"
+  tv_left: /bin/bash -c "python3 ./blk.py 192.168.1.193 send tv left"
+  tv_right: /bin/bash -c "python3 ./blk.py 192.168.1.193 send tv right"
+  tv_up: /bin/bash -c "python3 ./blk.py 192.168.1.193 send tv up"
+  tv_down: /bin/bash -c "python3 ./blk.py 192.168.1.193 send tv down"
+  tv_ok: /bin/bash -c "python3 ./blk.py 192.168.1.193 send tv ok"
+  tv_netflix: /bin/bash -c "python3 ./blk.py 192.168.1.193 send tv netflix"
+  tv_youtube: /bin/bash -c "python3 ./blk.py 192.168.1.193 send tv youtube"
+  ac_off: /bin/bash -c "python3 ./blk.py 192.168.1.193 send ac off"
+  ac_hot_28: /bin/bash -c "python3 ./blk.py 192.168.1.193 send ac on_hot_28"
+  light_switch: /bin/bash -c "python3 ./blk.py 192.168.1.193 send light switch"
+  light_dim_down: /bin/bash -c "python3 ./blk.py 192.168.1.193 send light dim_down"
+  light_dim_up: /bin/bash -c "python3 ./blk.py 192.168.1.193 send light dim_up"
+  light_romantic: /bin/bash -c "python3 ./blk.py 192.168.1.193 send light romantic"
+  light_normal: /bin/bash -c "python3 ./blk.py 192.168.1.193 send light normal"
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+

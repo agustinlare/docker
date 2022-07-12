@@ -1,0 +1,56 @@
+ac_off:
+  alias: AC Off
+  sequence:
+  - service: shell_command.ac_off
+    data: {}
+  mode: single
+tv_off:
+  alias: TV Off
+  sequence:
+  - service: shell_command.tv_off
+    data: {}
+  mode: single
+ubuntu_off:
+  alias: Ubuntu Off
+  sequence:
+  - service: shell_command.ubuntu_off
+    data: {}
+  mode: single
+ac_hot_27:
+  alias: AC HOT 28
+  sequence:
+  - service: shell_command.ac_hot_28
+    data: {}
+  mode: single
+light_switch:
+  alias: Light Switch
+  sequence:
+  - service: shell_command.light_switch
+    data: {}
+  mode: single
+light_dim_down:
+  alias: Light Dim Down
+  sequence:
+  - service: shell_command.light_dim_down
+    data: {}
+  mode: single
+light_dim_up:
+  alias: Light Dim Up
+  sequence:
+  - service: shell_command.light_dim_up
+    data: {}
+  mode: single
+'1657629778539':
+  alias: Start AC Hot at 8:30AM
+  sequence:
+  - condition: time
+    after: 08:30:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  - service: shell_command.ac_hot_28
+    data: {}
+  mode: single

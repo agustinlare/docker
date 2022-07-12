@@ -48,7 +48,7 @@ if func == 'learn':
         outfile.write(json_object)
 
 elif func == 'send':
-    get_device(dev).send_packet(bytes.fromhex(config[appl][btn]))
+    get_device(dev).send_data(bytes.fromhex(config[appl][btn]))
 
 else:
-    raise SystemExit('Dafuq you want?')
+    raise SystemExit("dafac you want?")
