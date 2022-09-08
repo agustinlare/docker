@@ -3,11 +3,14 @@ ac_off:
   sequence:
   - service: shell_command.ac_off
     data: {}
+  - condition: state
+    entity_id: script.ac_off
+    state: 'on'
   mode: single
-tv_off:
-  alias: TV Off
+tv_switch:
+  alias: TV Switch
   sequence:
-  - service: shell_command.tv_off
+  - service: shell_command.tv_switch
     data: {}
   mode: single
 ubuntu_off:
@@ -16,11 +19,20 @@ ubuntu_off:
   - service: shell_command.ubuntu_off
     data: {}
   mode: single
-ac_hot_27:
+centos_save:
+  alias: Save Centos
+  sequence:
+  - service: shell_command.centos_save
+    data: {}
+  mode: single
+ac_hot_28:
   alias: AC HOT 28
   sequence:
   - service: shell_command.ac_hot_28
     data: {}
+  - condition: state
+    entity_id: script.ac_hot_28
+    state: 'on'
   mode: single
 light_switch:
   alias: Light Switch
