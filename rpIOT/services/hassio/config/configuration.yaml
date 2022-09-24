@@ -25,6 +25,13 @@ shell_command:
   light_dim_up: /bin/bash -c "python3 blk.py 192.168.1.193 send light dim_up"
   light_romantic: /bin/bash -c "python3 blk.py 192.168.1.193 send light romantic"
   light_normal: /bin/bash -c "python3 blk.py 192.168.1.193 send light normal"
+sensor:
+  - platform: command_line
+    name: CPU Temperature
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    # If errors occur, make sure configuration file is encoded as UTF-8
+    unit_of_measurement: "°C"
+    value_template: "{{ value | multiply(0.001) | round(1) }}"
 
 automation: !include automations.yaml
 script: !include scripts.yaml

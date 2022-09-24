@@ -1,2 +1,7 @@
 rpIOT/services/hassio/config/.storage
 rpIOT/services/hassio/config/cfg/pi
+rpIOT/services/hassio/config/home-assistant.log
+rpIOT/services/hassio/config/home-assistant.log.1
+rpIOT/services/hassio/config/home-assistant_v2.db
+rpIOT/services/hassio/config/home-assistant_v2.db-shm
+rpIOT/services/hassio/config/home-assistant_v2.db-wal
