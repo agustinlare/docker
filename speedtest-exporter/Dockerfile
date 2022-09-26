@@ -3,7 +3,7 @@ FROM node:slim
 ARG PORT=9696
 
 ENV PORT=$PORT
-ENV HOME /home
+ENV HOME=/home
 
 RUN mkdir -p $HOME
 WORKDIR $HOME

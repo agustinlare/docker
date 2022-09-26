@@ -1,8 +1,0 @@
-admin:
-  existingSecret: grafana-secret
-  userKey: admin-user
-  passwordKey: admin-password
-
-grafana.ini:
-  server:
-    root_url: http://127.0.0.1/grafana

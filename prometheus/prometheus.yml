@@ -1,0 +1,82 @@
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "blackbox"
+    metrics_path: /probe
+    params:
+        module: [http_2xx]
+    static_configs:
+        - targets:
+          - https://signature-client.dev.clave.cloud
+          - https://creditos.clave.com
+          - https://clave-backoffice.dev.clave.cloud
+          - https://lapatriota.dev.clave.cloud
+          - https://signature-admin.app.clave.cloud
+          - https://creditos.dev.clave.cloud
+          - https://community.clave.com
+          - https://id.autentific.ar
+          - https://signature-admin.dev.clave.cloud
+          - https://clave-card-iframe.dev.clave.cloud
+          - https://creditos.lapatriota.com.ar
+          - https://web-investors.dev.clave.cloud
+          - https://clave-card-iframe.qa.clave.cloud
+          - https://clave-backoffice.qa.clave.cloud
+          - https://clave-loans-iframe.qa.clave.cloud
+          - https://clave-loans-iframe.dev.clave.cloud
+          - https://clave.com
+          - https://signature-admin.qa.clave.cloud
+          - https://clavecreditos.com
+          - https://clave-backoffice.app.clave.cloud
+          - https://app.dev.clave.cloud
+          - https://lapatriota.qa.clave.cloud
+          - https://web.qa.clave.cloud
+          - https://web.dev.clave.cloud
+          - https://devservices.dev.clave.cloud
+          - https://devservices.qa.clave.cloud
+          - https://signature-client.qa.clave.cloud
+          - https://app.lapatriota.qa.clave.cloud
+          - https://loans-details.clave.com
+          - https://app.clave.qa.clave.cloud
+          - https://app.rayco.dev.clave.cloud
+          - https://web-investors.qa.clave.cloud
+          - https://app.lapatriota.dev.clave.cloud
+          - https://creditos.qa.clave.cloud
+          - https://creditos-rayco.clave.com
+          - https://app.rayco.qa.clave.cloud
+          - https://lapatriota.com.ar
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 192.168.1.247:9115  # The blackbox exporter's real hostname:port.
+  - job_name: blackbox-metrics # To get metrics about the exporter itself
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+        - localhost:9115
+

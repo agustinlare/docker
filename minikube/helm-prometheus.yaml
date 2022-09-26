@@ -1,4 +1,0 @@
-server:
-  extraArgs:
-    web.external-url: http://127.0.0.1/prometheus
-    web.route-prefix: "/"
