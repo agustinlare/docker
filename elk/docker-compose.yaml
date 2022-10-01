@@ -1,0 +1,75 @@
+version: "3.7"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits: 
+      memlock:
+        soft: -1 
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add: 
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data-volume:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.12.0
+    restart: always
+    environment:
+      SERVER_NAME: kibana
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:7.12.0
+    container_name: metricbeat
+    restart: always
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - kibana
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.12.0
+    container_name: filebeat
+    restart: always
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    depends_on:
+      - kibana
+
+  heartbeat:
+    image: docker.elastic.co/beats/heartbeat:7.12.0
+    container_name: heartbeat
+    restart: always
+    environment:
+      - setup.kibana.host=kibana:5601
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    volumes:
+      - ${PWD}/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml
+    depends_on:
+      - kibana
+
+volumes: 
+  elasticsearch-data-volume:
+    driver: local
