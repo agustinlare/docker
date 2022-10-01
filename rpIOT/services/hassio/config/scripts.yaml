@@ -52,17 +52,9 @@ light_dim_up:
   - service: shell_command.light_dim_up
     data: {}
   mode: single
-'1657629778539':
-  alias: Start AC Hot at 8:30AM
+garmin_type_sync:
+  alias: Garmin Activity Type Corrector
   sequence:
-  - condition: time
-    after: 08:30:00
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-  - service: shell_command.ac_hot_28
+  - service: shell_command.garmin_type_sync
     data: {}
   mode: single
