@@ -16,6 +16,8 @@ shell_command:
   tv_right: /bin/bash -c "python3 blk.py 192.168.1.193 send tv right"
   tv_up: /bin/bash -c "python3 blk.py 192.168.1.193 send tv up"
   tv_down: /bin/bash -c "python3 blk.py 192.168.1.193 send tv down"
+  tv_vol_up: /bin/bash -c "python3 blk.py 192.168.1.193 send tv vol_up"
+  tv_vol_down: /bin/bash -c "python3 blk.py 192.168.1.193 send tv vol_down"
   tv_ok: /bin/bash -c "python3 blk.py 192.168.1.193 send tv ok"
   tv_netflix: /bin/bash -c "python3 blk.py 192.168.1.193 send tv netflix"
   tv_youtube: /bin/bash -c "python3 blk.py 192.168.1.193 send tv youtube"

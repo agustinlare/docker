@@ -1,1 +1,12 @@
-[]
+- id: '1664653468612'
+  alias: Garmin Type Sync
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 0
+  condition: []
+  action:
+  - service: script.garmin_type_sync
+    data: {}
+  mode: single

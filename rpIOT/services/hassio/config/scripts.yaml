@@ -7,12 +7,6 @@ ac_off:
     entity_id: script.ac_off
     state: 'on'
   mode: single
-tv_switch:
-  alias: TV Switch
-  sequence:
-  - service: shell_command.tv_switch
-    data: {}
-  mode: single
 ubuntu_off:
   alias: Ubuntu Off
   sequence:
@@ -56,5 +50,65 @@ garmin_type_sync:
   alias: Garmin Activity Type Corrector
   sequence:
   - service: shell_command.garmin_type_sync
+    data: {}
+  mode: single
+tv_switch:
+  alias: TV Switch
+  sequence:
+  - service: shell_command.tv_switch
+    data: {}
+  mode: single
+tv_source:
+  alias: TV Source Button
+  sequence:
+  - service: shell_command.tv_source
+    data: {}
+  mode: single
+tv_left:
+  alias: TV Left Button
+  sequence:
+  - service: shell_command.tv_left
+    data: {}
+  mode: single
+tv_right:
+  alias: TV Right Button
+  sequence:
+  - service: shell_command.tv_right
+    data: {}
+  mode: single
+tv_up:
+  alias: TV Up Button
+  sequence:
+  - service: shell_command.tv_up
+    data: {}
+  mode: single
+tv_down:
+  alias: TV Down Button
+  sequence:
+  - service: shell_command.tv_down
+    data: {}
+  mode: single
+tv_ok:
+  alias: TV Ok Button
+  sequence:
+  - service: shell_command.tv_ok
+    data: {}
+  mode: single
+tv_ok:
+  alias: TV Ok Button
+  sequence:
+  - service: shell_command.tv_ok
+    data: {}
+  mode: single
+tv_vol_up:
+  alias: TV Volume Up
+  sequence:
+  - service: shell_command.tv_vol_up
+    data: {}
+  mode: single
+tv_vol_down:
+  alias: TV Volume Down
+  sequence:
+  - service: shell_command.tv_vol_down
     data: {}
   mode: single
