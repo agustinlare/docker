@@ -201,15 +201,15 @@ print("")
 # 		break
 # 	return DATE
 
-STARTDATE = datetime.today().strftime('%Y-%m-%d')
+ENDDATE = datetime.today().strftime('%Y-%m-%d')
 from os import getenv, environ
 sync_env_name = "GARMIN_LAST_SYNC"
 if getenv(sync_env_name) != None:
-	end_date_var = getenv(sync_env_name)
+	start_date_var = getenv(sync_env_name)
 else:
-	end_date_var = "2022-01-01"
-ENDDATE = end_date_var
-environ[sync_env_name] = end_date_var
+	start_date_var = "2022-01-01"
+STARTDATE = start_date_var
+environ[sync_env_name] = start_date_var
 
 # Maximum number of activities you can request at once.  Set and enforced by Garmin.
 LIMIT_MAXIMUM = 1000
